@@ -23,6 +23,6 @@ public class CreateUserDTO {
     @NotBlank
     private String password;
 
-    private Set<String> roles;
+    private Set<String> roles; // a user can have more than one role
 
 }
