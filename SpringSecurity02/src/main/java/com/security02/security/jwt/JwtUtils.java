@@ -17,10 +17,10 @@ import java.util.function.Function;
 @Slf4j
 public class JwtUtils {
 
-    @Value("{jwt.secret.key}")
+    @Value("${jwt.secret.key}") // getting the correct property value with: "${...}"
     private String secretKey; // method signing (token)
 
-    @Value("{jwt.time.expiration}")
+    @Value("${jwt.time.expiration}")
     private String timeExpiration; // how long token validation last
 
     // generate access token

@@ -1,5 +1,9 @@
 package com.security02.security;
 
+import com.security02.security.filters.JwtAuthenticationFilter;
+import com.security02.security.jwt.JwtUtils;
+import com.security02.service.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,8 +21,19 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
+    @Autowired
+    JwtUtils jwtUtils;
+
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
+
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
+
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils);
+        jwtAuthenticationFilter.setAuthenticationManager(authenticationManager);
+        jwtAuthenticationFilter.setFilterProcessesUrl("/login"); // default
+
         return httpSecurity
                 .csrf(config -> config.disable())
                 .authorizeHttpRequests(auth -> {
@@ -28,20 +43,21 @@ public class SecurityConfig {
                 .sessionManagement(session -> {
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 })
-                .httpBasic()
-                .and()
+                //.httpBasic()
+                //.and()
+                .addFilter(jwtAuthenticationFilter)
                 .build();
     }
 
-    @Bean
-    UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("santi")
-                .password("1234")
-                .roles()
-                .build());
-        return manager;
-    }
+//    @Bean
+//    UserDetailsService userDetailsService() {
+//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+//        manager.createUser(User.withUsername("santi")
+//                .password("1234")
+//                .roles()
+//                .build());
+//        return manager;
+//    }
 
     /*
     Go to Authorization -> Basic Auth
@@ -56,9 +72,15 @@ public class SecurityConfig {
     @Bean
     AuthenticationManager authenticationManager(HttpSecurity httpSecurity, PasswordEncoder passwordEncoder) throws Exception { // requires passwordEncoder
         return httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(userDetailsService())
+                //.userDetailsService(userDetailsService())
+                .userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder)
                 .and().build();
     }
+
+
+//    public static void main(String[] args) {
+//        System.out.println(new BCryptPasswordEncoder().encode("1234")); // encrypts the password "1234"
+//    }
 
 }
