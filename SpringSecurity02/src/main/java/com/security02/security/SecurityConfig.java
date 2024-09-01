@@ -1,6 +1,7 @@
 package com.security02.security;
 
 import com.security02.security.filters.JwtAuthenticationFilter;
+import com.security02.security.filters.JwtAuthorizationFilter;
 import com.security02.security.jwt.JwtUtils;
 import com.security02.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -26,6 +28,9 @@ public class SecurityConfig {
 
     @Autowired
     UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    JwtAuthorizationFilter authorizationFilter;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
@@ -46,6 +51,7 @@ public class SecurityConfig {
                 //.httpBasic()
                 //.and()
                 .addFilter(jwtAuthenticationFilter)
+                .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class) // first, token is validated... go to POST login -> copy token; go to Get helloSecured -> Authorization -> Bearer Token -> paste Token
                 .build();
     }
 
