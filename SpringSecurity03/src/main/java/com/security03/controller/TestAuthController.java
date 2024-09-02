@@ -6,22 +6,23 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@PreAuthorize("denyAll()") // it denies access by default
+//@PreAuthorize("denyAll()") // it denies access by default
 public class TestAuthController {
 
     @GetMapping("/get")
-    @PreAuthorize("permitAll()")
+    //@PreAuthorize("permitAll()")
     public String helloGet(){
         return "Hello World - GET";
     }
 
     @GetMapping("/hello-secured")
-    @PreAuthorize("hasAuthority('READ')")
+    //@PreAuthorize("hasAuthority('READ')")
     public String helloSecured(){
         return "Hello World - SECURED";
     }
 
     @PostMapping("/post")
+    //@PreAuthorize("hasAuthority('READ') or hasAuthority('CREATE')")
     public String helloPost(){
         return "Hello World - POST";
     }

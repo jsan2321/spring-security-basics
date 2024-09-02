@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .build(); // httpSecurity.build() throws an exception and works with the Builder pattern
     }
 
-//    @Bean
+//    @Bean // IT WORKS with @PreAuthorize annotations in TestAuthController
 //    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 //        return httpSecurity
 //                .csrf(csrf -> csrf.disable())
@@ -67,7 +67,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(UserDetailServiceImpl userDetailService){
+    public AuthenticationProvider authenticationProvider(UserDetailServiceImpl userDetailService){ // have userDetailService fetch users in the database
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
         provider.setUserDetailsService(userDetailService);
@@ -96,6 +96,11 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(); // encrypt passwords and check if they are valid
     }
+
+//    public static void main(String[] args) {
+//        System.out.println(new BCryptPasswordEncoder().encode("1234"));
+//    }
+
 }

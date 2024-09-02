@@ -68,6 +68,7 @@ public class SpringSecurity03Application {
             /* CREATE USERS */
             UserEntity userSantiago = UserEntity.builder()
                     .username("santiago")
+                    //.password("1234") // Unencrypted password
                     .password("$2a$10$cMY29RPYoIHMJSuwRfoD3eQxU1J5Rww4VnNOUOAEPqCBshkNfrEf6")
                     .isEnabled(true)
                     .accountNoExpired(true)
