@@ -1,5 +1,6 @@
 package com.security03.config;
 
+import com.security03.service.UserDetailServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -73,25 +74,25 @@ public class SecurityConfig {
         return provider;
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() { // imagine this (in-memory) users come from a database...
-        //UserDetails userDetails =
-        List<UserDetails> userDetailsList = new ArrayList<>();
-
-        userDetailsList.add(User.withUsername("mints")
-                .password("1234")
-                .roles("ADMIN")
-                .authorities("READ", "CRATE")
-                .build());
-
-        userDetailsList.add(User.withUsername("danil")
-                .password("1234")
-                .roles("ADMIN")
-                .authorities("READ")
-                .build());
-
-        return new InMemoryUserDetailsManager(userDetailsList); // load users in memory
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() { // imagine this (in-memory) users come from a database...
+//        //UserDetails userDetails =
+//        List<UserDetails> userDetailsList = new ArrayList<>();
+//
+//        userDetailsList.add(User.withUsername("mints")
+//                .password("1234")
+//                .roles("ADMIN")
+//                .authorities("READ", "CRATE")
+//                .build());
+//
+//        userDetailsList.add(User.withUsername("danil")
+//                .password("1234")
+//                .roles("ADMIN")
+//                .authorities("READ")
+//                .build());
+//
+//        return new InMemoryUserDetailsManager(userDetailsList); // load users in memory
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
