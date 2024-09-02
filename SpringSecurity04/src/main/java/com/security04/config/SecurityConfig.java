@@ -1,6 +1,9 @@
 package com.security04.config;
 
+import com.security04.config.filter.JwtTokenValidator;
 import com.security04.service.UserDetailServiceImpl;
+import com.security04.util.JwtUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,30 +19,35 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    @Autowired
+    private JwtUtils jwtUtils;
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception { // httpSecurity goes through all the filters... SecurityFilterChain is validated because of DelegatingFilterProxy
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .csrf(csrf -> csrf.disable()) // it is necessary when using MVC because of forms
-                .httpBasic(Customizer.withDefaults()) // works with username and password, not token
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // STATELESS is ideal when using web apps
-                .authorizeHttpRequests(http -> { // Configure permissions to endpoints
+                .csrf(csrf -> csrf.disable())
+                .httpBasic(Customizer.withDefaults())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(http -> {
                     // Configuring public endpoints
-                    http.requestMatchers(HttpMethod.GET, "/auth/get").permitAll(); // allows access to everyone, without restriction
+                    http.requestMatchers(HttpMethod.GET, "/auth/get").permitAll();
 
                     // Configuring private endpoints
                     http.requestMatchers(HttpMethod.POST, "/auth/post").hasAnyRole("ADMIN", "DEVELOPER");
                     http.requestMatchers(HttpMethod.PATCH, "/auth/patch").hasAnyAuthority("REFACTOR");
 
                     // Configure the rest of the endpoints - NOT SPECIFIED
-                    http.anyRequest().denyAll(); // even with correct credentials, access is denied
+                    http.anyRequest().denyAll();
                 })
-                .build(); // httpSecurity.build() throws an exception and works with the Builder pattern
+                .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class) // token needs to pass through this filter (token validations) before (because of) BasicAuthenticationFilter
+                .build();
     }
 
     @Bean
