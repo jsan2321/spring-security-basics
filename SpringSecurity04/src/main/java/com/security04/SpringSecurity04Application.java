@@ -112,3 +112,9 @@ public class SpringSecurity04Application {
     }
 
 }
+
+// start postman,
+// go to POST - http://localhost:8080/auth/log-in,
+// Body, type user and password from above and in JSON format
+// copy generated jwt-token,
+// go to http://localhost:8080/method/post, Authorization, Bearer Token, paste token

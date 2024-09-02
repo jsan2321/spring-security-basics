@@ -4,17 +4,12 @@ package com.security04.controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
-public class TestAuthController {
+@RequestMapping("/method")
+public class TestController {
 
     @GetMapping("/get")
     public String helloGet(){
         return "Hello World - GET";
-    }
-
-    @GetMapping("/hello-secured")
-    public String helloSecured(){
-        return "Hello World - SECURED";
     }
 
     @PostMapping("/post")

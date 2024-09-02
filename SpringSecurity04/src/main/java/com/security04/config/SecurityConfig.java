@@ -37,11 +37,18 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(http -> {
                     // Configuring public endpoints
-                    http.requestMatchers(HttpMethod.GET, "/auth/get").permitAll();
+                    http.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
 
                     // Configuring private endpoints
-                    http.requestMatchers(HttpMethod.POST, "/auth/post").hasAnyRole("ADMIN", "DEVELOPER");
-                    http.requestMatchers(HttpMethod.PATCH, "/auth/patch").hasAnyAuthority("REFACTOR");
+                    http.requestMatchers(HttpMethod.GET, "/method/get").hasAuthority("READ");
+                    http.requestMatchers(HttpMethod.POST, "/method/post").hasAuthority("CREATE");
+                    http.requestMatchers(HttpMethod.DELETE, "/method/delete").hasAuthority("DELETE");
+                    http.requestMatchers(HttpMethod.PUT, "/method/put").hasAuthority("UPDATE");
+                    http.requestMatchers(HttpMethod.POST, "/method/post").hasAnyRole("ADMIN", "DEVELOPER");
+                    http.requestMatchers(HttpMethod.GET, "/method/get").hasAnyRole("INVITED");
+                    //http.requestMatchers(HttpMethod.GET, "/method/get").hasAnyAuthority("INVITED"); // INVITED is a roles not authority
+
+
 
                     // Configure the rest of the endpoints - NOT SPECIFIED
                     http.anyRequest().denyAll();
