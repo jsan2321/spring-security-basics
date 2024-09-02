@@ -18,4 +18,5 @@ public class PermissionEntity {
 
     @Column(unique = true, nullable = false, updatable = false)
     private String name;
+
 }
