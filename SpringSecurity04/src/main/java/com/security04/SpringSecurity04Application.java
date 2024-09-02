@@ -1,10 +1,10 @@
-package com.security03;
+package com.security04;
 
-import com.security03.persistence.entity.PermissionEntity;
-import com.security03.persistence.entity.RoleEntity;
-import com.security03.persistence.entity.RoleEnum;
-import com.security03.persistence.entity.UserEntity;
-import com.security03.persistence.repository.UserRepository;
+import com.security04.persistence.entity.PermissionEntity;
+import com.security04.persistence.entity.RoleEntity;
+import com.security04.persistence.entity.RoleEnum;
+import com.security04.persistence.entity.UserEntity;
+import com.security04.persistence.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.Set;
 
 @SpringBootApplication
-public class SpringSecurity03Application {
+public class SpringSecurity04Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringSecurity03Application.class, args);
+        SpringApplication.run(SpringSecurity04Application.class, args);
     }
 
-    @Bean // repository injected
+    @Bean
     CommandLineRunner init(UserRepository userRepository) { // this method is executed once the application is started
         return args -> {
             /* Create PERMISSIONS */
@@ -69,7 +69,7 @@ public class SpringSecurity03Application {
             UserEntity userSantiago = UserEntity.builder()
                     .username("santiago")
                     //.password("1234") // Unencrypted password
-                    .password("$2a$10$cMY29RPYoIHMJSuwRfoD3eQxU1J5Rww4VnNOUOAEPqCBshkNfrEf6") // token version of "1234"
+                    .password("$2a$10$cMY29RPYoIHMJSuwRfoD3eQxU1J5Rww4VnNOUOAEPqCBshkNfrEf6")
                     .isEnabled(true)
                     .accountNoExpired(true)
                     .accountNoLocked(true)
